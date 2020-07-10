@@ -10,10 +10,14 @@ const {startVpn, stopVpn} = require('./vpn.js');
 const exec = require('child_process').exec;
 const temp = require('temp');
 const request = require('request');
+const spawn = require('child_process').spawn;
+const ipModule = require('./changeIp.js');
+const process = require('process');
 
 let tray = null;
 let win;
 let fir = true;
+let manualVpnSW = false;
 
 const verNum = 500;
 const gameList = ['Bluestacks.exe', 'League of legends.exe', 'riotclientservices.exe', 'POWERPNT.EXE'];
@@ -25,6 +29,7 @@ function updateIP() {
     } catch (e) {
 
     }
+    win = null;
     request('https://api.iasa.kr/ip/link/lastest', (error, response, url) => {
         let notification = new Notification({
             title: '업데이트 중...',
@@ -44,7 +49,6 @@ function updateIP() {
         file.on('finish', () => {
             file.close();
             setTimeout(() => {
-                const spawn = require('child_process').spawn;
                 let child = spawn(fName, [], {
                     detached: true,
                     stdio: ['ignore', 'ignore', 'ignore']
@@ -159,12 +163,12 @@ function onFirstRun() {
     app.setAppUserModelId("iasa.null.ip");
     setInterval(() => {
         isGameRunning().then(res => {
-            if (res && !settings.get('nvpn')) startVpn();
+            if ((res && !settings.get('nvpn')) || manualVpnSW) startVpn();
             else stopVpn();
         });
     }, 1500);
     chkUpdate();
-    if (require('process').argv.length !== 2) createMainWindow();
+    if (process.argv.length !== 2) createMainWindow();
     createTray();
 }
 
@@ -193,7 +197,6 @@ async function autoIpUpdate() {
     if (fir && tName != null) {
         fir = false;
         if (win == null) {
-            const ipModule = require('./changeIp.js');
             if (tName === "Iasa_hs" && ipModule.getCurrentState() === 0) {
                 let notification = new Notification({
                     title: 'IP 변경됨',
@@ -223,7 +226,7 @@ setInterval(() => {
 
 
 function chkUpdate() {
-    require("request")({url: 'https://api.iasa.kr/ip/ver', timeout: 1000}, (e, response) => {
+    request({url: 'https://api.iasa.kr/ip/ver', timeout: 1000}, (e, response) => {
         if (!e && parseInt(response.body) > verNum) {
             updateIP();
         }

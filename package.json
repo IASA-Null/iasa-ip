@@ -48,13 +48,13 @@
   "homepage": "https://github.com/IASA-Null/iasa-ip#readme",
   "dependencies": {
     "electron-acrylic-window": "^0.0.3",
-    "electron-settings": "^3.2.0",
+    "electron-settings": "^4.0.2",
     "request": "^2.88.2",
     "temp": "^0.9.1",
     "wifi-name": "^3.1.1"
   },
   "devDependencies": {
-    "electron": "^8.3.4",
+    "electron": "^9.1.0",
     "electron-builder": "^22.7.0"
   }
 }

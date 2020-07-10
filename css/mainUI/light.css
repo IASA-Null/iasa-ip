@@ -43,3 +43,8 @@ ul.dropdown-content.select-dropdown {
 #splashFont {
     fill: #ffffff;
 }
+
+.toast {
+    background: white;
+    color: black;
+}

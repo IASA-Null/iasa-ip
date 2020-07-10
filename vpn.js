@@ -3,23 +3,22 @@ const {Notification} = require('electron');
 const {exec} = require('child_process');
 const temp = require('temp');
 const fs = require('fs');
+const request = require('request');
 
 let proc = null;
 let notification = null;
 let intv = null;
-let manualVpnSW = false;
 
 function checkOpenVpn() {
     try {
-        if (fs.existsSync('C:\\Program Files\\OpenVPN\\bin\\openvpn.exe')) return true;
-        else return false;
+        return fs.existsSync('C:\\Program Files\\OpenVPN\\bin\\openvpn.exe');
     } catch (e) {
         return false;
     }
 }
 
 function installVpn() {
-    return new Promise(function (resolve, reject) {
+    return new Promise(resolve => {
         if (checkOpenVpn()) {
             resolve();
             return;
@@ -45,7 +44,7 @@ function installVpn() {
 function startVpn() {
     if (proc) return;
     proc = true;
-    return new Promise(function (resolve, reject) {
+    return new Promise((resolve, reject) => {
         installVpn().then(() => {
             if (notification) notification.close();
             notification = new Notification({
@@ -54,18 +53,18 @@ function startVpn() {
                 icon: 'C:\\Program Files\\IP\\res\\ipLogo.ico'
             });
             notification.show();
-            require("request")({url: 'http://www.vpngate.net/api/iphone/', timeout: 10000}, (e, res, body) => {
+            request({url: 'http://www.vpngate.net/api/iphone/', timeout: 10000}, (e, res, body) => {
                 try {
-                    temp.open({suffix: '.ovpn'}, function (err, info) {
+                    temp.open({suffix: '.ovpn'}, (err, info) => {
                         if (err) throw err;
                         try {
-                            fs.write(info.fd, Buffer.from(body.split(/\r?\n/)[2].split(',').reverse()[0], 'base64').toString(), (err) => {
+                            fs.write(info.fd, Buffer.from(body.split(/\r?\n/)[2].split(',').reverse()[0], 'base64').toString(), () => {
                                 //console.log(err);
                             });
                         } catch (e) {
                             reject();
                         }
-                        fs.close(info.fd, function (err) {
+                        fs.close(info.fd, err => {
                             if (err) throw err;
                             proc = spawn('C:\\Program Files\\OpenVPN\\bin\\openvpn.exe', ['--config', info.path]);
                             proc.stdout.on('data', (data) => {
