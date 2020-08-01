@@ -1,11 +1,12 @@
+const {execSync} = require('child_process');
+const settings = require('electron-settings');
+
 function changeToSchool() {
-    return new Promise(resolve => {
-        const {execSync} = require('child_process');
-        const settings = require('electron-settings');
-        const adp = settings.get('adp');
-        const ip = settings.get('ip');
+    return new Promise(async resolve => {
+        const adp = await settings.get('adp');
+        const ip = await settings.get('ip');
         const mask = "255.255.255.0";
-        const gate = settings.get('gate');
+        const gate = await settings.get('gate');
         const dns1 = '211.46.153.1';
         const dns2 = '210.104.203.1';
         try {
@@ -15,30 +16,28 @@ function changeToSchool() {
         } catch (e) {
 
         }
-        settings.set('stat', 1);
+        await settings.set('stat', 1);
         resolve();
     });
 }
 
 function changeToOut() {
-    return new Promise(resolve => {
-        const {execSync} = require('child_process');
-        const settings = require('electron-settings');
-        const adp = settings.get('adp');
+    return new Promise(async resolve => {
+        const adp = await settings.get('adp');
         try {
             execSync('netsh -c int ip set address name="' + adp + '" source=dhcp');
             execSync('netsh -c int ip set dnsservers name="' + adp + '" source=dhcp');
         } catch (e) {
 
         }
-        settings.set('stat', 0);
+        await settings.set('stat', 0);
         resolve();
     });
 }
 
-function getCurrentState() {
+async function getCurrentState() {
     const settings = require('electron-settings');
-    const t = settings.get('stat');
+    const t = await settings.get('stat');
     if (!t) return 0;
     else return t;
 }

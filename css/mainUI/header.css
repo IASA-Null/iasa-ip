@@ -3,9 +3,8 @@
     position: fixed;
     height: 32px;
     z-index: 9999;
-    width: calc(100vw - 2px);
+    width: 100vw;
     padding: 4px;
-    top: 1px;
 }
 
 #titlebar #drag-region {
@@ -107,6 +106,4 @@
     height: 100vh;
     margin: 0;
     padding: 0;
-    border-style: solid;
-    border-width: 1px;
 }

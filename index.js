@@ -1,7 +1,7 @@
-const {app, BrowserWindow, Menu, Tray, dialog, ipcMain, Notification} = require('electron');
+const {app, Menu, Tray, dialog, ipcMain, Notification} = require('electron');
 const path = require('path');
 const url = require('url');
-const vibrancy = require('electron-acrylic-window');
+const {BrowserWindow} = require('electron-acrylic-window');
 const webControl = require('./webControl.js');
 const {execSync} = require('child_process');
 const settings = require('electron-settings');
@@ -77,13 +77,13 @@ try {
 
 }
 
-function resetApplication() {
-    settings.set('svc', true);
+async function resetApplication() {
+    await settings.set('svc', true);
     win.close();
     win = null;
     settings.delete('ip');
-    settings.set('adp', null);
-    settings.set('gate', null);
+    await settings.set('adp', null);
+    await settings.set('gate', null);
     createMainWindow();
 }
 
@@ -96,8 +96,27 @@ ipcMain.on('update', () => {
 });
 
 
+ipcMain.on('hide', () => {
+    if (win) win.minimize();
+});
+
+
+ipcMain.on('vibrancyLight', () => {
+    if (win) {
+        win.setVibrancy('#FFFFFF77');
+        win.show();
+    }
+});
+ipcMain.on('vibrancyDark', () => {
+    if (win) {
+        win.setVibrancy('#00000077');
+        win.show();
+    }
+});
+
+
 function openMainWindow() {
-    if (win && !win.isVisible()) {
+    if (win) {
         win.show();
     } else {
         createMainWindow();
@@ -129,41 +148,38 @@ function createTray() {
 
 function createMainWindow() {
     win = new BrowserWindow({
-        width: 850, height: 600, webPreferences: {
+        width: 850,
+        height: 600,
+        webPreferences: {
             nodeIntegration: true,
             webSecurity: false
-        }, show: false, icon: path.join(__dirname, 'res/ipLogo.ico'), frame: false, transparent: true
+        },
+        icon: path.join(__dirname, 'res/ipLogo.ico'),
+        frame: false,
+        backgroundColor: '#00000000'
     });
-    win.setMenu(null);
     win.loadURL(url.format({
         pathname: path.join(__dirname, 'index.html'),
         protocol: 'file:',
         slashes: true
     }));
-    win.on('close', () => {
+    win.once('close', () => {
         win = null;
     });
-    win.once('ready-to-show', () => {
-        win.show();
-        vibrancy.setVibrancy(win);
-        win.setResizable(false);
-        ipcMain.on('hide', () => {
-            win.minimize();
-        });
-        //win.webContents.openDevTools();
-    });
+    win.setResizable(false);
+    //win.webContents.openDevTools({mode: "detach"});
 }
 
-function onBackgroundService() {
-    if (settings.get('svc') == null) settings.set('svc', true);
-    return settings.get('svc');
+async function onBackgroundService() {
+    if (await settings.get('svc') == null) await settings.set('svc', true);
+    return await settings.get('svc');
 }
 
 function onFirstRun() {
     app.setAppUserModelId("iasa.null.ip");
     setInterval(() => {
-        isGameRunning().then(res => {
-            if ((res && !settings.get('nvpn')) || manualVpnSW) startVpn();
+        isGameRunning().then(async res => {
+            if ((res && !await settings.get('nvpn')) || manualVpnSW) startVpn();
             else stopVpn();
         });
     }, 1500);
@@ -183,7 +199,7 @@ app.on('second-instance', openMainWindow);
 app.on('ready', onFirstRun);
 
 async function allCloseHandler() {
-    const res = onBackgroundService();
+    const res = await onBackgroundService();
     if (!res) app.exit();
 }
 
@@ -197,7 +213,7 @@ async function autoIpUpdate() {
     if (fir && tName != null) {
         fir = false;
         if (win == null) {
-            if (tName === "Iasa_hs" && ipModule.getCurrentState() === 0) {
+            if (tName === "Iasa_hs" && await ipModule.getCurrentState() === 0) {
                 let notification = new Notification({
                     title: 'IP 변경됨',
                     body: 'IP가 학교 내부망으로 변경되었습니다.',
@@ -206,7 +222,7 @@ async function autoIpUpdate() {
                 notification.show();
                 await ipModule.changeToSchool();
             }
-            if (tName !== "Iasa_hs" && ipModule.getCurrentState() === 1) {
+            if (tName !== "Iasa_hs" && await ipModule.getCurrentState() === 1) {
                 let notification = new Notification({
                     title: 'IP 변경됨',
                     body: 'IP가 학교 외부망으로 변경되었습니다.',

@@ -1,5 +1,4 @@
 html {
-    background: #222222aa;
     color: white;
 }
 
@@ -10,10 +9,6 @@ html {
 .modal, .modal * {
     background: #333333 !important;
     color: white;
-}
-
-#wrapper {
-    border-color: white;
 }
 
 #credit-black {
