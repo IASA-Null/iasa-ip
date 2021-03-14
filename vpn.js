@@ -41,7 +41,7 @@ function installVpn() {
     });
 }
 
-function startVpn() {
+function startVpn(isAuto) {
     if (proc) return;
     proc = true;
     return new Promise((resolve, reject) => {
@@ -49,7 +49,7 @@ function startVpn() {
             if (notification) notification.close();
             notification = new Notification({
                 title: 'VPN 연결중',
-                body: '게임 실행을 감지해 VPN에 연결하는 중입니다.',
+                body: isAuto ? '게임 실행을 감지해 VPN에 연결하는 중입니다.' : 'VPN에 연결하는 중입니다.',
                 icon: 'C:\\Program Files\\IP\\res\\ipLogo.ico'
             });
             notification.show();
@@ -97,7 +97,7 @@ function stopVpn() {
         if (notification) notification.close();
         notification = new Notification({
             title: 'VPN 연결 해제',
-            body: '게임 종료를 감지해 VPN의 연결을 해제했습니다.',
+            body: 'VPN의 연결을 해제했습니다.',
             icon: 'C:\\Program Files\\IP\\res\\ipLogo.ico'
         });
         notification.show();

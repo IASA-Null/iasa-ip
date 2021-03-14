@@ -95,6 +95,10 @@ ipcMain.on('update', () => {
     updateIP();
 });
 
+ipcMain.on('toggleVPN', () => {
+    manualVpnSW = !manualVpnSW
+});
+
 
 ipcMain.on('hide', () => {
     if (win) win.minimize();
@@ -149,12 +153,12 @@ function createTray() {
 function createMainWindow() {
     win = new BrowserWindow({
         width: 850,
-        height: 600,
+        height: 550,
         webPreferences: {
             nodeIntegration: true,
             webSecurity: false
         },
-        icon: path.join(__dirname, 'res/ipLogo.ico'),
+        icon: 'C:\\Program Files\\IP\\res\\ipLogo.ico',
         frame: false,
         backgroundColor: '#00000000'
     });
@@ -179,7 +183,7 @@ function onFirstRun() {
     app.setAppUserModelId("iasa.null.ip");
     setInterval(() => {
         isGameRunning().then(async res => {
-            if ((res && !await settings.get('nvpn')) || manualVpnSW) startVpn();
+            if ((res && !await settings.get('nvpn')) || manualVpnSW) startVpn(!manualVpnSW);
             else stopVpn();
         });
     }, 1500);

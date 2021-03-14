@@ -261,3 +261,7 @@ function reqResetAdp() {
 function resetAdp() {
     M.toast({html: '완료되었습니다!'});
 }
+
+function toggleVPN() {
+    ipcRenderer.send('toggleVPN');
+}
