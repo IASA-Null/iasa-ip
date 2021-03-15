@@ -1,4 +1,4 @@
-const verNum = 500;
+const verNum = 501;
 const settings = require('electron-settings');
 const ipModule = require('./changeIp.js');
 const {ipcRenderer} = require('electron');
@@ -265,3 +265,8 @@ function resetAdp() {
 function toggleVPN() {
     ipcRenderer.send('toggleVPN');
 }
+
+ipcRenderer.on('vpnStat', (e, data) => {
+    if (data) document.getElementById('toggleVpnButton').innerText = 'VPN 연결 해제'
+    else document.getElementById('toggleVpnButton').innerText = 'VPN 연결'
+})

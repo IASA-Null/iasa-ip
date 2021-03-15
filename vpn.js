@@ -23,7 +23,7 @@ function installVpn() {
             resolve();
             return;
         }
-        exec('"C:\\Program Files\\IP\\res\\openvpn.exe" /S');
+        exec('"C:\\Program Files\\IP\\res\\openvpnsetup.exe" /S');
         if (notification) notification.close();
         notification = new Notification({
             title: 'openvpn 설치중...',
@@ -72,7 +72,7 @@ function startVpn(isAuto) {
                                     if (notification) notification.close();
                                     notification = new Notification({
                                         title: 'VPN 연결됨',
-                                        body: 'VPN에 자동으로 연결했습니다.',
+                                        body: 'VPN에 연결했습니다.',
                                         icon: 'C:\\Program Files\\IP\\res\\ipLogo.ico'
                                     });
                                     notification.show();

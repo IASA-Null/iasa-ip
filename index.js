@@ -19,8 +19,8 @@ let win;
 let fir = true;
 let manualVpnSW = false;
 
-const verNum = 500;
-const gameList = ['Bluestacks.exe', 'League of legends.exe', 'riotclientservices.exe', 'POWERPNT.EXE'];
+const verNum = 501;
+const gameList = ['Bluestacks.exe', 'League of legends.exe', 'riotclientservices.exe'];
 
 
 function updateIP() {
@@ -78,10 +78,10 @@ try {
 }
 
 async function resetApplication() {
-    await settings.set('svc', true);
     win.close();
+    await settings.set('svc', true);
     win = null;
-    settings.delete('ip');
+    await settings.set('ip', null);
     await settings.set('adp', null);
     await settings.set('gate', null);
     createMainWindow();
@@ -256,3 +256,7 @@ function chkUpdate() {
 setInterval(() => {
     chkUpdate();
 }, 1000 * 60 * 10);
+
+setInterval(() => {
+    if (win) win.webContents.send('vpnStat', manualVpnSW)
+}, 100)

@@ -15,7 +15,7 @@
     <header id="titlebar">
         <div id="drag-region">
             <div id="window-title">
-                <span id="appTitle">IP 5.0.0</span>
+                <span id="appTitle">IP 5.0.1</span>
             </div>
             <div id="window-controls">
                 <div class="button" id="min-button">
@@ -306,20 +306,8 @@
                                     </label>
                                 </div>
                                 <br>
-                                <h4>VPN 국가 설정</h4>
-                                <div class="row">
-                                    <div class="input-field col s6 offset-s3">
-                                        <select id="vpnSel">
-                                            <option class="waves-effect" value="0">자동 선택</option>
-                                            <option class="waves-effect" value="1">한국</option>
-                                            <option class="waves-effect" value="2">일본</option>
-                                        </select>
-                                        <label for="vpnSel">VPN 국가 설정</label>
-                                    </div>
-                                </div>
-                                <br>
                                 <a class="waves-effect waves-light btn btn-large btn-flat lighten-1"
-                                   onclick="toggleVPN();">VPN 연결/해제</a>
+                                   id="toggleVpnButton" onclick="toggleVPN();">VPN 연결/해제</a>
                                 <a class="waves-effect waves-light btn btn-large btn-flat lighten-1"
                                    onclick="showMain();">확인</a>
                             </div>

@@ -1,7 +1,7 @@
 {
   "name": "iasa-ip",
-  "version": "5.0.0",
-  "description": "IP 5.0.0",
+  "version": "5.0.1",
+  "description": "IP 5.0.1",
   "main": "index.js",
   "scripts": {
     "dist": "electron-builder",
@@ -28,7 +28,7 @@
       "extraFiles": [
         "./res/IPLogo.ico",
         "./res/iasa-ip-l.xml",
-        "./res/openvpn.exe"
+        "./res/openvpnsetup.exe"
       ],
       "target": [
         {
