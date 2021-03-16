@@ -1,4 +1,4 @@
-const verNum = 501;
+const verNum = 502;
 const settings = require('electron-settings');
 const ipModule = require('./changeIp.js');
 const {ipcRenderer} = require('electron');

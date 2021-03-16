@@ -19,7 +19,7 @@ let win;
 let fir = true;
 let manualVpnSW = false;
 
-const verNum = 501;
+const verNum = 502;
 const gameList = ['Bluestacks.exe', 'League of legends.exe', 'riotclientservices.exe'];
 
 
@@ -156,7 +156,8 @@ function createMainWindow() {
         height: 550,
         webPreferences: {
             nodeIntegration: true,
-            webSecurity: false
+            webSecurity: false,
+            enableRemoteModule: true,
         },
         icon: 'C:\\Program Files\\IP\\res\\ipLogo.ico',
         frame: false,
